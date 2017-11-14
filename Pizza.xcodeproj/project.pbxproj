@@ -8,20 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		96D8DD191FBACAEB009B4D5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D8DD181FBACAEB009B4D5A /* AppDelegate.swift */; };
-		96D8DD1B1FBACAEB009B4D5A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D8DD1A1FBACAEB009B4D5A /* ViewController.swift */; };
+		96D8DD1B1FBACAEB009B4D5A /* CatalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D8DD1A1FBACAEB009B4D5A /* CatalogController.swift */; };
 		96D8DD1E1FBACAEB009B4D5A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96D8DD1C1FBACAEB009B4D5A /* Main.storyboard */; };
 		96D8DD201FBACAEB009B4D5A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96D8DD1F1FBACAEB009B4D5A /* Assets.xcassets */; };
 		96D8DD231FBACAEB009B4D5A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96D8DD211FBACAEB009B4D5A /* LaunchScreen.storyboard */; };
+		96D8DD2F1FBB075F009B4D5A /* CatalogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D8DD2E1FBB075F009B4D5A /* CatalogCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		96D8DD151FBACAEB009B4D5A /* Pizza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pizza.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96D8DD181FBACAEB009B4D5A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		96D8DD1A1FBACAEB009B4D5A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		96D8DD1A1FBACAEB009B4D5A /* CatalogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogController.swift; sourceTree = "<group>"; };
 		96D8DD1D1FBACAEB009B4D5A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		96D8DD1F1FBACAEB009B4D5A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		96D8DD221FBACAEB009B4D5A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		96D8DD241FBACAEB009B4D5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		96D8DD2E1FBB075F009B4D5A /* CatalogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,9 +56,10 @@
 		96D8DD171FBACAEB009B4D5A /* Pizza */ = {
 			isa = PBXGroup;
 			children = (
+				96D8DD2D1FBB0734009B4D5A /* Views & Cells */,
+				96D8DD2C1FBB0706009B4D5A /* Controllers */,
 				96D8DD2B1FBAEA90009B4D5A /* Resources */,
 				96D8DD181FBACAEB009B4D5A /* AppDelegate.swift */,
-				96D8DD1A1FBACAEB009B4D5A /* ViewController.swift */,
 				96D8DD241FBACAEB009B4D5A /* Info.plist */,
 			);
 			path = Pizza;
@@ -70,6 +73,22 @@
 				96D8DD1F1FBACAEB009B4D5A /* Assets.xcassets */,
 			);
 			path = Resources;
+			sourceTree = "<group>";
+		};
+		96D8DD2C1FBB0706009B4D5A /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				96D8DD1A1FBACAEB009B4D5A /* CatalogController.swift */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		96D8DD2D1FBB0734009B4D5A /* Views & Cells */ = {
+			isa = PBXGroup;
+			children = (
+				96D8DD2E1FBB075F009B4D5A /* CatalogCell.swift */,
+			);
+			path = "Views & Cells";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -104,7 +123,7 @@
 				TargetAttributes = {
 					96D8DD141FBACAEB009B4D5A = {
 						CreatedOnToolsVersion = 9.1;
-						ProvisioningStyle = Manual;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -144,7 +163,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				96D8DD1B1FBACAEB009B4D5A /* ViewController.swift in Sources */,
+				96D8DD2F1FBB075F009B4D5A /* CatalogCell.swift in Sources */,
+				96D8DD1B1FBACAEB009B4D5A /* CatalogController.swift in Sources */,
 				96D8DD191FBACAEB009B4D5A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -282,15 +302,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y46D5WH659;
 				INFOPLIST_FILE = Pizza/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Pizza;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -298,15 +320,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = Y46D5WH659;
 				INFOPLIST_FILE = Pizza/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Pizza;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

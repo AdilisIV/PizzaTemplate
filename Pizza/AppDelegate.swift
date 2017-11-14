@@ -9,14 +9,11 @@
 import UIKit
 
 extension UIColor {
-    static func RGB(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
-        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
+    static func RGB(red: Int, green: Int, blue: Int) -> UIColor {
+        return UIColor(red: CGFloat(red)/255, green: CGFloat(green)/255, blue: CGFloat(blue)/255, alpha: 1)
     }
-    static func darkCoral() -> UIColor {
-        return UIColor.RGB(red:216, green:106, blue:67)
-    }
-    static func tigerEye() -> UIColor {
-        return UIColor.RGB(red:216, green:137, blue:67)
+    static func HEX(_ rgb: Int) -> UIColor {
+        return RGB(red: (rgb >> 16) & 0xFF, green: (rgb >> 8) & 0xFF, blue: rgb & 0xFF)
     }
 }
 
@@ -27,15 +24,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        let font = UIFont.systemFont(ofSize: 20, weight: .light)
         
-        UINavigationBar.appearance().barTintColor = .darkCoral()
+        let mainTintColor = UIColor.HEX(0xd86a43)
+        let font = UIFont.systemFont(ofSize: 20, weight: .light)
+        UINavigationBar.appearance().barTintColor = mainTintColor
         UINavigationBar.appearance().tintColor = .white
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : font]
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .white
         if #available(iOS 11.0, *) {
             UIRefreshControl.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).tintColor = .white
         }
+        window?.tintColor = mainTintColor
         return true
     }
 
