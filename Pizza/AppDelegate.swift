@@ -8,6 +8,18 @@
 
 import UIKit
 
+extension UIColor {
+    static func RGB(red: CGFloat, green: CGFloat, blue: CGFloat) -> UIColor {
+        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: 1)
+    }
+    static func darkCoral() -> UIColor {
+        return UIColor.RGB(red:216, green:106, blue:67)
+    }
+    static func tigerEye() -> UIColor {
+        return UIColor.RGB(red:216, green:137, blue:67)
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
@@ -15,7 +27,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        let font = UIFont.systemFont(ofSize: 20, weight: .light)
+        
+        UINavigationBar.appearance().barTintColor = .darkCoral()
+        UINavigationBar.appearance().tintColor = .white
+        UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : font]
+        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .white
+        if #available(iOS 11.0, *) {
+            UIRefreshControl.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).tintColor = .white
+        }
         return true
     }
 
