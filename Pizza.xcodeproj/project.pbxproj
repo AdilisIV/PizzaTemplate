@@ -8,22 +8,22 @@
 
 /* Begin PBXBuildFile section */
 		96D8DD191FBACAEB009B4D5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D8DD181FBACAEB009B4D5A /* AppDelegate.swift */; };
-		96D8DD1B1FBACAEB009B4D5A /* CatalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D8DD1A1FBACAEB009B4D5A /* CatalogController.swift */; };
 		96D8DD1E1FBACAEB009B4D5A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96D8DD1C1FBACAEB009B4D5A /* Main.storyboard */; };
 		96D8DD201FBACAEB009B4D5A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 96D8DD1F1FBACAEB009B4D5A /* Assets.xcassets */; };
 		96D8DD231FBACAEB009B4D5A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 96D8DD211FBACAEB009B4D5A /* LaunchScreen.storyboard */; };
 		96D8DD2F1FBB075F009B4D5A /* CatalogCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D8DD2E1FBB075F009B4D5A /* CatalogCell.swift */; };
+		96D8DD311FBB0B6B009B4D5A /* CatalogController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96D8DD301FBB0B6A009B4D5A /* CatalogController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		96D8DD151FBACAEB009B4D5A /* Pizza.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Pizza.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		96D8DD181FBACAEB009B4D5A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		96D8DD1A1FBACAEB009B4D5A /* CatalogController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogController.swift; sourceTree = "<group>"; };
 		96D8DD1D1FBACAEB009B4D5A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		96D8DD1F1FBACAEB009B4D5A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		96D8DD221FBACAEB009B4D5A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		96D8DD241FBACAEB009B4D5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		96D8DD2E1FBB075F009B4D5A /* CatalogCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogCell.swift; sourceTree = "<group>"; };
+		96D8DD301FBB0B6A009B4D5A /* CatalogController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CatalogController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +78,7 @@
 		96D8DD2C1FBB0706009B4D5A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				96D8DD1A1FBACAEB009B4D5A /* CatalogController.swift */,
+				96D8DD301FBB0B6A009B4D5A /* CatalogController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -164,7 +164,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96D8DD2F1FBB075F009B4D5A /* CatalogCell.swift in Sources */,
-				96D8DD1B1FBACAEB009B4D5A /* CatalogController.swift in Sources */,
+				96D8DD311FBB0B6B009B4D5A /* CatalogController.swift in Sources */,
 				96D8DD191FBACAEB009B4D5A /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -239,7 +239,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -290,7 +290,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -306,7 +306,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y46D5WH659;
 				INFOPLIST_FILE = Pizza/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Pizza;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -324,7 +323,6 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = Y46D5WH659;
 				INFOPLIST_FILE = Pizza/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.Pizza;
 				PRODUCT_NAME = "$(TARGET_NAME)";
