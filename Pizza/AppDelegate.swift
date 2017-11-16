@@ -9,11 +9,15 @@
 import UIKit
 
 extension UIColor {
+    
     static func RGB(red: Int, green: Int, blue: Int) -> UIColor {
         return UIColor(red: CGFloat(red)/255, green: CGFloat(green)/255, blue: CGFloat(blue)/255, alpha: 1)
     }
     static func HEX(_ rgb: Int) -> UIColor {
         return RGB(red: (rgb >> 16) & 0xFF, green: (rgb >> 8) & 0xFF, blue: rgb & 0xFF)
+    }
+    static func DarkCoral() -> UIColor {
+        return HEX(0xd86a43)
     }
 }
 
@@ -25,12 +29,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
-        let mainTintColor = UIColor.HEX(0xd86a43)
+        let mainTintColor = UIColor.DarkCoral()
         let font = UIFont.systemFont(ofSize: 20, weight: .light)
         UINavigationBar.appearance().barTintColor = mainTintColor
         UINavigationBar.appearance().tintColor = .white
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : font]
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .white
+        UITabBar.appearance().barTintColor = UIColor.HEX(0xfff0e8)
+        UITabBar.appearance().shadowImage = UIImage()
+        UITabBar.appearance().backgroundImage = UIImage()
         if #available(iOS 11.0, *) {
             UIRefreshControl.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).tintColor = .white
         }
