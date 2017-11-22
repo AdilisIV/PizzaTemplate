@@ -34,14 +34,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UINavigationBar.appearance().barTintColor = mainTintColor
         UINavigationBar.appearance().tintColor = .white
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : font]
+        UINavigationBar.appearance().shadowImage = UIImage()
+        //UINavigationBar.appearance().setBackgroundImage(UIImage(), for: .default)
+        UINavigationBar.appearance().backgroundColor = mainTintColor
         UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).tintColor = .white
-        UITabBar.appearance().barTintColor = UIColor.HEX(0xfff0e8)
+        UITabBar.appearance().barTintColor = .white
         UITabBar.appearance().shadowImage = UIImage()
         UITabBar.appearance().backgroundImage = UIImage()
+        UITabBar.appearance().backgroundColor = .white
         if #available(iOS 11.0, *) {
             UIRefreshControl.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).tintColor = .white
         }
         window?.tintColor = mainTintColor
+        UIApplication.shared.statusBarStyle = .lightContent
         return true
     }
 
