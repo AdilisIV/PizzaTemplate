@@ -679,7 +679,7 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" red="0.95294117647058818" green="0.95294117647058818" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" rowHeight="224" id="yPU-dh-Vaa">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="CartCell" rowHeight="224" id="yPU-dh-Vaa" customClass="CartCell" customModule="Pizza" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="320" height="224"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yPU-dh-Vaa" id="UFh-F4-PJ8">
@@ -801,6 +801,10 @@
                                                                 </label>
                                                                 <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minimumValue="1" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Cg7-aR-C62">
                                                                     <rect key="frame" x="202" y="80" width="94" height="29"/>
+                                                                    <connections>
+                                                                        <action selector="countChanged:" destination="yPU-dh-Vaa" eventType="valueChanged" id="EoF-hx-SUC"/>
+                                                                        <action selector="countStepperAction:" destination="yPU-dh-Vaa" eventType="valueChanged" id="9Cr-cO-v3s"/>
+                                                                    </connections>
                                                                 </stepper>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="T6e-vG-5aH">
                                                                     <rect key="frame" x="146" y="82.5" width="8" height="21"/>
@@ -855,6 +859,19 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <connections>
+                                            <outlet property="bonusLabel" destination="2xn-12-QUs" id="wnP-zL-SgH"/>
+                                            <outlet property="cartButton" destination="OG9-jY-BgM" id="Gta-6i-4s6"/>
+                                            <outlet property="countLabel" destination="h2e-gO-nzB" id="H73-bV-2Up"/>
+                                            <outlet property="descriptionLabel" destination="DQv-td-Xlb" id="SZq-rN-DrZ"/>
+                                            <outlet property="doughSelector" destination="1Yl-rR-Caa" id="NV0-D0-YED"/>
+                                            <outlet property="favoriteButton" destination="ahP-So-sF6" id="U22-7T-qhL"/>
+                                            <outlet property="imageView" destination="vZj-Ur-xAW" id="KDJ-AV-LUk"/>
+                                            <outlet property="priceLabel" destination="lIh-Gj-WPt" id="oFU-8u-Nj1"/>
+                                            <outlet property="productImageView" destination="vZj-Ur-xAW" id="b2K-BL-GdF"/>
+                                            <outlet property="sizeSelector" destination="a4V-fA-LpA" id="VQq-ys-IEg"/>
+                                            <outlet property="titleLabel" destination="7cV-Ip-Afl" id="ie8-ch-od6"/>
+                                        </connections>
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
