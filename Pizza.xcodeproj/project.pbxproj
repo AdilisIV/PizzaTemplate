@@ -90,7 +90,7 @@
 		96D8DD171FBACAEB009B4D5A /* Pizza */ = {
 			isa = PBXGroup;
 			children = (
-				96D8DD2D1FBB0734009B4D5A /* Views & Cells */,
+				96D8DD2D1FBB0734009B4D5A /* Views & Cells & Segues */,
 				96D8DD2C1FBB0706009B4D5A /* Controllers */,
 				96D8DD2B1FBAEA90009B4D5A /* Resources */,
 				96D8DD181FBACAEB009B4D5A /* AppDelegate.swift */,
@@ -119,7 +119,7 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		96D8DD2D1FBB0734009B4D5A /* Views & Cells */ = {
+		96D8DD2D1FBB0734009B4D5A /* Views & Cells & Segues */ = {
 			isa = PBXGroup;
 			children = (
 				96D8DD2E1FBB075F009B4D5A /* CatalogCell.swift */,
@@ -127,7 +127,7 @@
 				96135D841FC2AFEA00136C40 /* CondencedCell.swift */,
 				96E3C6A61FC5391E002AE3B8 /* CartCell.swift */,
 			);
-			path = "Views & Cells";
+			path = "Views & Cells & Segues";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

@@ -10,6 +10,7 @@ import UIKit
 
 class CartController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
+    @IBOutlet weak var orderTotalLabel: UILabel!
     @IBOutlet weak var orderButton: UIButton!
     
     override func viewDidLoad() {

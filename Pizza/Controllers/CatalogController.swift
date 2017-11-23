@@ -54,9 +54,11 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
     private var layoutChangeInProgress = false
     
     private var notificationToken: NotificationToken?
-    //private let realm = try! Realm()
-    private let products = try! Realm().objects(ProductObject.self).sorted(byKeyPath: "title")
     
+    private let products = try! Realm().objects(ProductObject.self)
+    private let purchases = try! Realm().objects(CartItemObject.self)
+    private let categories = try! Realm().objects(CategoryObject.self)
+
     override func viewDidLoad() {
         
         super.viewDidLoad()
