@@ -21,9 +21,9 @@ class ProductController: UIViewController, UICollectionViewDelegate, UICollectio
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        shadowView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+        shadowView.layer.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.25).cgColor
         shadowView.layer.shadowOffset = CGSize(width: 0, height: 1.0)
-        shadowView.layer.shadowRadius = 2.0
+        shadowView.layer.shadowRadius = 3.0
         shadowView.layer.shadowOpacity = 1.0
         shadowView.layer.masksToBounds = false
         

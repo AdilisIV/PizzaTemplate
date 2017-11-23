@@ -7,27 +7,43 @@
 //
 
 import UIKit
+import RealmSwift
 
-struct CityEntity {
-    var id = Int()
-    var title = String()
+final class CityObject: Object {
+    @objc dynamic var id = Int()
+    @objc dynamic var title = String()
+    override static func primaryKey() -> String? {
+        return "id"
+    }
 }
 
-struct CategoryEntity {
-    var id = Int()
-    var title = String()
-    var city = String()
-    var icon = String()
+final class CategoryObject: Object {
+    @objc dynamic var id = Int()
+    @objc dynamic var title = String()
+    @objc dynamic var icon = String()
+    override static func primaryKey() -> String? {
+        return "id"
+    }
 }
 
-class ProductEntity {
-    var id = Int()
-    var categoryId = Int()
-    var cityId = Int()
-    var title = String()
-    var description = String()
-    var icon = String()
-    var favorite = false
+final class ProductObject: Object {
+    @objc dynamic var id = Int()
+    @objc dynamic var categoryId = Int()
+    @objc dynamic var cityId = Int()
+    @objc dynamic var title = String()
+    @objc dynamic var fullDescription = String()
+    @objc dynamic var icon = String()
+    @objc dynamic var favorite = false
+    override static func primaryKey() -> String? {
+        return "id"
+    }
+}
+
+final class CartItemObject: Object {
+    @objc dynamic var productId = Int()
+    @objc dynamic var productSize = Int()
+    @objc dynamic var productType = Int()
+    @objc dynamic var productCount = Int()
 }
 
 class CatalogController: UICollectionViewController, UISearchResultsUpdating, UISearchBarDelegate {
@@ -36,7 +52,10 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
     private var searchController = UISearchController()
     private var condencedLayout = false
     private var layoutChangeInProgress = false
-    private var products = [ProductEntity]()
+    
+    private var notificationToken: NotificationToken?
+    //private let realm = try! Realm()
+    private let products = try! Realm().objects(ProductObject.self).sorted(byKeyPath: "title")
     
     override func viewDidLoad() {
         
@@ -60,16 +79,6 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         nb.shadowRadius = 3.0
         nb.shadowOpacity = 1.0
         nb.masksToBounds = false
-        if #available(iOS 11.0, *) {
-//            let sb = navigationItem.searchController!.searchBar.layer
-//            sb.borderWidth = 1
-//            sb.borderColor = navigationController?.navigationBar.barTintColor?.cgColor
-//            sb.shadowColor = UIColor(red: 1, green: 1, blue: 1, alpha: 0.15).cgColor
-//            sb.shadowOffset = CGSize(width: 0, height: 0)
-//            sb.shadowRadius = 3.0
-//            sb.shadowOpacity = 1.0
-//            sb.masksToBounds = false
-        }
         let tb = tabBarController!.tabBar.layer
 //        tb.borderWidth = 1
 //        tb.borderColor = tabBarController?.tabBar.barTintColor?.cgColor
@@ -79,10 +88,36 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         tb.shadowOpacity = 1.0
         tb.masksToBounds = false
 
-        //tabBarController?.tabBar.clipsToBounds = true
-        for _ in 1...20 {
-            let product = ProductEntity()
-            products.append(product)
+        if products.count < 20 {
+            let realm = try! Realm()
+            try! realm.write {
+                for i in 1...20 {
+                    let product = ProductObject()
+                    product.id = i
+                    realm.add(product)
+                }
+            }
+        }
+
+        self.notificationToken = products.observe { (changes: RealmCollectionChange) in
+            switch changes {
+            case .initial:
+                // Results are now populated and can be accessed without blocking the UI
+                self.collectionView?.reloadData()
+                break
+            case .update(_, let deletions, let insertions, let modifications):
+                // Query results have changed, so apply them to the TableView
+                self.collectionView?.performBatchUpdates({
+                    self.collectionView?.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
+                    self.collectionView?.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
+                    self.collectionView?.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
+                }, completion: { (completed) in })
+                break
+            case .error(let err):
+                // An error occurred while opening the Realm file on the background worker thread
+                fatalError("\(err)")
+                break
+            }
         }
     }
     
@@ -142,11 +177,14 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
     }
 
     @IBAction func favoriteAction(_ sender: UIButton) {
-        guard let button: UIButton = condencedLayout ? (sender.superview?.superview?.superview as! CondencedCell).favoriteButton : (sender.superview?.superview?.superview as! CatalogCell).favoriteButton else { return }
+//        guard let button: UIButton = condencedLayout ? (sender.superview?.superview?.superview as! CondencedCell).favoriteButton : (sender.superview?.superview?.superview as! CatalogCell).favoriteButton else { return }
         let index = sender.superview!.superview!.superview!.tag
         let product = products[index]
-        product.favorite = !product.favorite
-        button.isSelected = product.favorite
+        let realm = try! Realm()
+        try! realm.write {
+            product.favorite = !product.favorite
+        }
+        //button.isSelected = product.favorite
     }
     
     @IBAction func changeLayout(_ sender: UIButton) {
@@ -189,13 +227,11 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CondencedCell", for: indexPath) as! CondencedCell
             cell.tag = index
             cell.favoriteButton.isSelected = product.favorite
-            cell.bonusLabel.text = "tag=" + String(index)
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CatalogCell", for: indexPath) as! CatalogCell
             cell.tag = index
             cell.favoriteButton.isSelected = product.favorite
-            cell.bonusLabel.text = "tag=" + String(index)
             return cell
         }
 //        DispatchQueue.main.async {
