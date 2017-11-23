@@ -13,28 +13,66 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Collection View Controller-->
+        <!--Category Controller-->
         <scene sceneID="DY5-iw-4Da">
             <objects>
-                <collectionViewController id="Alz-R0-ZfU" sceneMemberID="viewController">
+                <collectionViewController id="Alz-R0-ZfU" customClass="CategoryController" customModule="Pizza" customModuleProvider="target" sceneMemberID="viewController">
                     <collectionView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" id="zvC-Vt-REF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="455"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="ade-pZ-coc">
-                            <size key="itemSize" width="50" height="50"/>
+                        <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="2" id="ade-pZ-coc">
+                            <size key="itemSize" width="152" height="172"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                            <inset key="sectionInset" minX="2" minY="4" maxX="2" maxY="4"/>
                         </collectionViewFlowLayout>
                         <cells>
-                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" id="1Ug-ig-T5q">
-                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" reuseIdentifier="CategoryCell" id="1Ug-ig-T5q" customClass="CategoryCell" customModule="Pizza" customModuleProvider="target">
+                                <rect key="frame" x="2" y="4" width="152" height="172"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
-                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="152" height="172"/>
                                     <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c0y-vL-amr">
+                                            <rect key="frame" x="0.0" y="0.0" width="152" height="172"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Pizza" translatesAutoresizingMaskIntoConstraints="NO" id="rki-25-Osw">
+                                                    <rect key="frame" x="16" y="16" width="120" height="120"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" secondItem="rki-25-Osw" secondAttribute="height" multiplier="1:1" id="jpY-dZ-opr"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Пицца" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kRT-Gm-s3Z">
+                                                    <rect key="frame" x="8" y="147" width="136" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="medium" pointSize="14"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                            <constraints>
+                                                <constraint firstItem="kRT-Gm-s3Z" firstAttribute="leading" secondItem="c0y-vL-amr" secondAttribute="leading" constant="8" id="Gc1-58-E4k"/>
+                                                <constraint firstItem="rki-25-Osw" firstAttribute="leading" secondItem="c0y-vL-amr" secondAttribute="leading" constant="16" id="QE0-sY-tzd"/>
+                                                <constraint firstAttribute="bottom" secondItem="kRT-Gm-s3Z" secondAttribute="bottom" constant="8" id="Umq-Ma-O6z"/>
+                                                <constraint firstAttribute="trailing" secondItem="rki-25-Osw" secondAttribute="trailing" constant="16" id="dYM-MY-ap0"/>
+                                                <constraint firstAttribute="trailing" secondItem="kRT-Gm-s3Z" secondAttribute="trailing" constant="8" id="mI6-nV-tpb"/>
+                                                <constraint firstItem="rki-25-Osw" firstAttribute="top" secondItem="c0y-vL-amr" secondAttribute="top" constant="16" id="oEa-fH-6Ah"/>
+                                                <constraint firstAttribute="height" secondItem="c0y-vL-amr" secondAttribute="width" multiplier="1:1" constant="20" id="xqm-z9-c0K"/>
+                                            </constraints>
+                                        </view>
+                                    </subviews>
                                 </view>
+                                <constraints>
+                                    <constraint firstItem="c0y-vL-amr" firstAttribute="leading" secondItem="1Ug-ig-T5q" secondAttribute="leading" id="tjs-OE-zAn"/>
+                                    <constraint firstAttribute="trailing" secondItem="c0y-vL-amr" secondAttribute="trailing" id="vwN-C5-Ial"/>
+                                    <constraint firstItem="c0y-vL-amr" firstAttribute="top" secondItem="1Ug-ig-T5q" secondAttribute="top" id="yfJ-ic-zKp"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="categoryImageView" destination="rki-25-Osw" id="RGL-qy-txJ"/>
+                                    <outlet property="categoryTitleLabel" destination="kRT-Gm-s3Z" id="cwh-OA-gg2"/>
+                                </connections>
                             </collectionViewCell>
                         </cells>
                         <connections>
@@ -42,10 +80,17 @@
                             <outlet property="delegate" destination="Alz-R0-ZfU" id="BAv-p6-PUh"/>
                         </connections>
                     </collectionView>
+                    <navigationItem key="navigationItem" id="2d9-gH-lUL">
+                        <barButtonItem key="leftBarButtonItem" title="✕  Категории" id="v9L-Dh-KRh">
+                            <connections>
+                                <action selector="backAction:" destination="Alz-R0-ZfU" id="U5A-Mz-sHW"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I3E-l6-q08" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1189" y="-824"/>
+            <point key="canvasLocation" x="1188.75" y="-825"/>
         </scene>
         <!--Catalog Controller-->
         <scene sceneID="Bqv-JT-qfg">
@@ -56,10 +101,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" red="0.95294117647058818" green="0.95294117647058818" blue="0.95294117647058818" alpha="1" colorSpace="calibratedRGB"/>
                         <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="2" minimumInteritemSpacing="2" id="3es-jv-4bI">
-                            <size key="itemSize" width="310" height="310"/>
+                            <size key="itemSize" width="152" height="152"/>
                             <size key="headerReferenceSize" width="0.0" height="0.0"/>
                             <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                            <inset key="sectionInset" minX="0.0" minY="4" maxX="0.0" maxY="4"/>
+                            <inset key="sectionInset" minX="2" minY="4" maxX="2" maxY="4"/>
                         </collectionViewFlowLayout>
                         <cells>
                             <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" misplaced="YES" insetsLayoutMarginsFromSafeArea="NO" reuseIdentifier="CatalogCell" id="GP2-RR-4LY" customClass="CatalogCell" customModule="Pizza" customModuleProvider="target">
@@ -405,7 +450,7 @@
                                                 <rect key="frame" x="263" y="8" width="45" height="167.5"/>
                                             </imageView>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vXP-T6-zlP">
-                                                <rect key="frame" x="4" y="67" width="38" height="50"/>
+                                                <rect key="frame" x="4" y="67.5" width="38" height="50"/>
                                                 <inset key="contentEdgeInsets" minX="16" minY="16" maxX="16" maxY="16"/>
                                                 <state key="normal" image="ScrollLeft"/>
                                                 <state key="selected" image="CellDarkStar"/>
@@ -414,7 +459,7 @@
                                                 </connections>
                                             </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AWe-rr-p7K">
-                                                <rect key="frame" x="265" y="67" width="39" height="50"/>
+                                                <rect key="frame" x="265" y="67.5" width="39" height="50"/>
                                                 <inset key="contentEdgeInsets" minX="16" minY="16" maxX="16" maxY="16"/>
                                                 <state key="normal" image="ScrollRight"/>
                                                 <state key="selected" image="CellDarkStar"/>
@@ -641,10 +686,12 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
+                        <outlet property="delegate" destination="Gkm-GE-Yn5" id="2Sl-hu-WvC"/>
                         <segue destination="WWJ-Dq-gIG" kind="relationship" relationship="rootViewController" id="Rhn-B9-uP9"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZXC-l1-VlT" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <customObject id="Gkm-GE-Yn5" customClass="NavigationControllerDelegate" customModule="Pizza" customModuleProvider="target"/>
             </objects>
             <point key="canvasLocation" x="462.39999999999998" y="-81.859070464767626"/>
         </scene>
@@ -991,6 +1038,7 @@
         <image name="Discounts" width="16" height="19"/>
         <image name="ImagePlaceholder" width="512" height="512"/>
         <image name="Menu" width="18" height="18"/>
+        <image name="Pizza" width="360" height="360"/>
         <image name="ProductCart" width="25" height="26"/>
         <image name="ScrollLeft" width="6" height="11"/>
         <image name="ScrollRight" width="7" height="11"/>
@@ -999,6 +1047,6 @@
         <image name="rightShadow" width="45" height="1"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="YiR-2h-OMl"/>
+        <segue reference="LPO-WF-ReU"/>
     </inferredMetricsTieBreakers>
 </document>
