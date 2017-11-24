@@ -16,19 +16,13 @@ class CategoryController: UICollectionViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-        if #available(iOS 11.0, *) {
-            collectionView?.insetsLayoutMarginsFromSafeArea = true
-            //navigationItem.searchController = searchController
-        }
-        //automaticallyAdjustsScrollViewInsets = true
+        if #available(iOS 11.0, *) { collectionView?.insetsLayoutMarginsFromSafeArea = true }
     }
     
     @IBAction func backAction(_ sender: UIBarButtonItem) {
         navigationController?.popViewController(animated: true)
     }
+    
     /*
     // MARK: - Navigation
 
@@ -41,14 +35,14 @@ class CategoryController: UICollectionViewController {
 
     // MARK: UICollectionViewDataSource
 
+    ///////////////////////////// Collection View Delegate & Datasource ///////////////////////////////
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of items
         return categories.count
     }
 
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
-    
         return cell
     }
     
@@ -58,6 +52,7 @@ class CategoryController: UICollectionViewController {
         if firstLaunch {
             firstLaunch = false
             insets = UIEdgeInsets(top: navigationController!.navigationBar.intrinsicContentSize.height, left: 0, bottom: 49, right: 0)
+            if #available(iOS 11.0, *) {} else { insets.top += 20 }
         }
         collectionView?.contentInset = insets
         collectionView?.scrollIndicatorInsets = insets
@@ -68,12 +63,9 @@ class CategoryController: UICollectionViewController {
     }
 
     func updateLayout(size: CGSize, animated: Bool) {
-        
         let currentlayout = collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
         var insets = UIEdgeInsets.zero
-        if #available(iOS 11.0, *) {
-            insets = collectionView!.safeAreaInsets
-        }
+        if #available(iOS 11.0, *) { insets = collectionView!.safeAreaInsets }
         
         let columns = (size.width > size.height) ? 4 : 2 as CGFloat
         let width = (size.width-10-insets.left-insets.right-(columns-1)*2)/columns
@@ -87,42 +79,7 @@ class CategoryController: UICollectionViewController {
         layout.sectionInset = UIEdgeInsets(top: 6, left: 4, bottom: 6, right: 4)
         layout.minimumLineSpacing = 4
         layout.minimumInteritemSpacing = 2
-        if #available(iOS 11.0, *) {
-            layout.sectionInsetReference = .fromSafeArea
-        }
+        if #available(iOS 11.0, *) { layout.sectionInsetReference = .fromSafeArea }
         collectionView?.setCollectionViewLayout(layout, animated: animated)
     }
-
-
-    // MARK: UICollectionViewDelegate
-
-    /*
-    // Uncomment this method to specify if the specified item should be highlighted during tracking
-    override func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment this method to specify if the specified item should be selected
-    override func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    */
-
-    /*
-    // Uncomment these methods to specify if an action menu should be displayed for the specified item, and react to actions performed on the item
-    override func collectionView(_ collectionView: UICollectionView, shouldShowMenuForItemAt indexPath: IndexPath) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, canPerformAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, performAction action: Selector, forItemAt indexPath: IndexPath, withSender sender: Any?) {
-    
-    }
-    */
-
 }
