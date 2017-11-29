@@ -1,0 +1,269 @@
+{
+	"categories": [
+		{ "id": 1,  "title": "Пицца",        "icon": "http://192.168.1.158/Magazine/goods/icons/p1.jpg" },
+		{ "id": 2,  "title": "Напитки",      "icon": "http://192.168.1.158/Magazine/goods/icons/s1.jpg" },
+		{ "id": 3,  "title": "Суши",         "icon": null },
+		{ "id": 4,  "title": "Роллы",        "icon": null },
+		{ "id": 5,  "title": "Сеты",         "icon": "http://192.168.1.158/Magazine/goods/icons/set1.jpg" },
+		{ "id": 6,  "title": "Постное меню", "icon": null },
+		{ "id": 7,  "title": "Салаты",       "icon": null },
+		{ "id": 8,  "title": "Воки",         "icon": null },
+		{ "id": 9,  "title": "Закуски",      "icon": null },
+		{ "id": 10, "title": "Десерты",      "icon": null },
+		{ "id": 11, "title": "Соусы",        "icon": null },
+		{ "id": 12, "title": "Детское меню", "icon": null },
+		{ "id": 13, "title": "Супы",         "icon": null }
+	],
+	"sizes": [
+		{ "id": 1, "title": "24 см." },
+		{ "id": 2, "title": "30 см." },
+		{ "id": 3, "title": "40 см." }
+	],
+	"doughs": [
+		{ "id": 1, "title": "Пышное" },
+		{ "id": 2, "title": "Тонкое" }
+	],
+	"products": [
+		{
+			"id": 11,
+			"category": 1,
+			"title": "Сырная",
+			"description": "Помидоры, соус сырный, сыр моцарелла",
+			"icon": "http://192.168.1.158/Magazine/goods/icons/p1.jpg",
+			"units": "грамм",
+			"variants": [
+				{ "size": 1, "dough": 1, "weight": 440, "price": 440 },
+				{ "size": 2, "dough": 1, "weight": 610, "price": 580 },
+				{ "size": 3, "dough": 1, "weight": 880, "price": 720 },
+				{ "size": 1, "dough": 2, "weight": 440, "price": 440 },
+				{ "size": 2, "dough": 2, "weight": 610, "price": 580 },
+				{ "size": 3, "dough": 2, "weight": 880, "price": 720 }
+			]
+		},
+		{
+			"id": 12,
+			"category": 1,
+			"title": "Неаполитана",
+			"description": "Бекон, ветчина,курица,перец болгарский, помидоры, маслины, соус гриль,сыр моцарелла, зелень",
+			"icon": "http://192.168.1.158/Magazine/goods/icons/p2.jpg",
+			"units": "грамм",
+			"variants": [
+				{ "size": 1, "dough": 1, "weight": 440, "price": 440 },
+				{ "size": 2, "dough": 1, "weight": 610, "price": 580 },
+				{ "size": 3, "dough": 1, "weight": 880, "price": 720 },
+				{ "size": 1, "dough": 2, "weight": 440, "price": 440 },
+				{ "size": 2, "dough": 2, "weight": 610, "price": 580 },
+				{ "size": 3, "dough": 2, "weight": 880, "price": 720 }
+			]
+		},
+		{
+			"id": 13,
+			"category": 1,
+			"title": "Неаполитана 2",
+			"description": "Бекон, ветчина,курица,перец болгарский, помидоры, маслины, соус гриль,сыр моцарелла, зелень",
+			"icon": "http://192.168.1.158/Magazine/goods/icons/p2.jpg",
+			"units": "грамм",
+			"variants": [
+				{ "size": 1, "dough": 1, "weight": 440, "price": 440 },
+				{ "size": 2, "dough": 1, "weight": 610, "price": 580 },
+				{ "size": 3, "dough": 1, "weight": 880, "price": 720 },
+				{ "size": 1, "dough": 2, "weight": 440, "price": 440 },
+				{ "size": 2, "dough": 2, "weight": 610, "price": 580 },
+				{ "size": 3, "dough": 2, "weight": 880, "price": 720 }
+			]
+		},
+		{
+			"id": 21,
+			"category": 2,
+			"title": "Морс клюквенный",
+			"description": "Натуральный фирменный морс из клюквы",
+			"icon": "http://192.168.1.158/Magazine/goods/icons/s1.jpg",
+			"units": "л.",
+			"variants": [
+				{ "weight": 0.5, "price": 50 },
+				{ "weight": 1.25, "price": 100 },
+				{ "weight": 2, "price": 150 }
+			]
+		},
+		{
+			"id": 22,
+			"category": 2,
+			"title": "Сок Зеленое яблоко",
+			"description": "Качественные премиальные 100% соки и нектары для прилива сил и бодрости",
+			"icon": "http://192.168.1.158/Magazine/goods/icons/s2.jpg",
+			"units": "л.",
+			"variants": [
+				{ "weight": 0.25, "price": 60 },
+				{ "weight": 0.5, "price": 110 },
+				{ "weight": 1, "price": 200 }
+			]
+		},
+		{
+			"id": 51,
+			"category": 5,
+			"title": "Сет 4 ролла с Филадельфией V.2.0",
+			"description": "Обновился состав сета: Ред-ролл заменён на ролл Горячая цыпа Ролл Горячая цыпа, ролл с огурцом, Фета-ролл, ролл Филадельфия-баланс.",
+			"icon": "http://192.168.1.158/Magazine/goods/icons/set1.jpg",
+			"units": "грамм",
+			"variants": [{ "weight": 780, "price": 569 }]
+		},
+		{
+			"id": 52,
+			"category": 5,
+			"title": "Сет Терияки",
+			"description": "Ролл Спайси фиш, ролл Горячий панко, ролл Горячий терияки, ролл Блэк стар, ролл С доброй рыбкой.",
+			"icon": "http://192.168.1.158/Magazine/goods/icons/set2.jpg",
+			"units": "грамм",
+			"variants": [{ "weight": 1055, "price": 987 }]
+		},
+		{
+			"id": 53,
+			"category": 5,
+			"title": "Сет YAKIMOTO",
+			"description": "Ролл Спайси фиш, ролл Горячий панко, ролл Горячий терияки, ролл Блэк стар, ролл С доброй рыбкой.",
+			"icon": "http://192.168.1.158/Magazine/goods/icons/set2.jpg",
+			"units": "грамм",
+			"variants": [{ "weight": 1055, "price": 987 }]
+		}
+	],
+	"ingredients": [
+		{
+			"id": 1,
+			"title": "Ананасы",
+			"weight": 30,
+			"price": 90
+		},
+		{
+			"id": 2,
+			"title": "Моцарелла",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 3,
+			"title": "Болгарский перец",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 4,
+			"title": "Помидоры",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 5,
+			"title": "Маслины",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 6,
+			"title": "Халапеньо",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 7,
+			"title": "Морепродукты",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 8,
+			"title": "Сыр Пармезан",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 9,
+			"title": "Сыр Эмменталь",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 10,
+			"title": "Сыр Чеддер",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 11,
+			"title": "Сыр Дор Блю",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 12,
+			"title": "Маринованые огурцы",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 13,
+			"title": "Сыр микс",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 14,
+			"title": "Семга хол. копчения.",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 15,
+			"title": "Семга слабосол.",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 16,
+			"title": "Ветчина",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 17,
+			"title": "Куриная грудка",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 18,
+			"title": "Пепперони",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 19,
+			"title": "Говядина",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 20,
+			"title": "Свинина",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 21,
+			"title": "Бекон",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 22,
+			"title": "Сало",
+			"weight": 90,
+			"price": 110
+		},
+		{
+			"id": 23,
+			"title": "Грибы",
+			"weight": 90,
+			"price": 110
+		}
+	]
+}

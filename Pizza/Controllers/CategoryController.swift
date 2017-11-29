@@ -8,42 +8,18 @@
 
 import UIKit
 import RealmSwift
+import Kingfisher
 
 class CategoryController: UICollectionViewController {
 
     private var firstLaunch = true
     private let categories = try! Realm().objects(CategoryObject.self)
+    public var currentCategory = 0
+    weak var catalogController: CatalogController? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
         if #available(iOS 11.0, *) { collectionView?.insetsLayoutMarginsFromSafeArea = true }
-    }
-    
-    @IBAction func backAction(_ sender: UIBarButtonItem) {
-        navigationController?.popViewController(animated: true)
-    }
-    
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
-    // MARK: UICollectionViewDataSource
-
-    ///////////////////////////// Collection View Delegate & Datasource ///////////////////////////////
-    
-    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return categories.count
-    }
-
-    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
-        return cell
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -58,10 +34,17 @@ class CategoryController: UICollectionViewController {
         collectionView?.scrollIndicatorInsets = insets
     }
     
-    override func viewSafeAreaInsetsDidChange() {
-        updateLayout(size: collectionView!.bounds.size, animated: false)
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        currentCategory = indexPath.row
+        catalogController?.currentCategory = currentCategory
+        catalogController?.collectionView?.reloadData()
+        navigationController?.popViewController(animated: true)
     }
-
+    
+    @IBAction func backAction(_ sender: UIBarButtonItem) {
+        navigationController?.popViewController(animated: true)
+    }
+    
     func updateLayout(size: CGSize, animated: Bool) {
         let currentlayout = collectionView?.collectionViewLayout as! UICollectionViewFlowLayout
         var insets = UIEdgeInsets.zero
@@ -81,5 +64,27 @@ class CategoryController: UICollectionViewController {
         layout.minimumInteritemSpacing = 2
         if #available(iOS 11.0, *) { layout.sectionInsetReference = .fromSafeArea }
         collectionView?.setCollectionViewLayout(layout, animated: animated)
+    }
+
+    ///////////////////////////// Collection View Delegate & Datasource ///////////////////////////////
+    
+    override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return categories.count
+    }
+
+    override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CategoryCell", for: indexPath) as! CategoryCell
+        cell.categoryTitleLabel.text = categories[indexPath.row].title
+        if let url = URL(string: self.categories[indexPath.row].icon) {
+            DispatchQueue.main.async { cell.categoryImageView.kf.setImage(with: url) }
+        } else {
+            cell.categoryImageView.image = UIImage(named:"ImagePlaceholder")
+        }
+
+        return cell
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        updateLayout(size: collectionView!.bounds.size, animated: false)
     }
 }

@@ -8,42 +8,58 @@
 
 import UIKit
 import RealmSwift
+import SwiftyJSON
 
-final class CityObject: Object {
+class CityObject: Object {
     @objc dynamic var id = Int()
     @objc dynamic var title = String()
-    override static func primaryKey() -> String? {
-        return "id"
-    }
+    override static func primaryKey() -> String? { return "id" }
 }
 
-final class CategoryObject: Object {
+class CategoryObject: Object {
     @objc dynamic var id = Int()
     @objc dynamic var title = String()
     @objc dynamic var icon = String()
-    override static func primaryKey() -> String? {
-        return "id"
-    }
+    let products = List<ProductObject>()
+    override static func primaryKey() -> String? { return "id" }
 }
 
-final class ProductObject: Object {
+class VariantObject: Object {
+    @objc dynamic var weight = Double()
+    @objc dynamic var price = Double()
+    @objc dynamic var size = Int()
+    @objc dynamic var dough = Int()
+}
+
+class SizeObject: Object {
     @objc dynamic var id = Int()
-    @objc dynamic var categoryId = Int()
-    @objc dynamic var cityId = Int()
+    @objc dynamic var title = String()
+    override static func primaryKey() -> String? { return "id" }
+}
+
+class DoughObject: Object {
+    @objc dynamic var id = Int()
+    @objc dynamic var title = String()
+    override static func primaryKey() -> String? { return "id" }
+}
+
+class ProductObject: Object {
+    @objc dynamic var id = Int()
+    @objc dynamic var category = Int()
     @objc dynamic var title = String()
     @objc dynamic var fullDescription = String()
     @objc dynamic var icon = String()
+    @objc dynamic var units = String()
     @objc dynamic var favorite = false
-    override static func primaryKey() -> String? {
-        return "id"
-    }
+    let variants = List<VariantObject>()
+    override static func primaryKey() -> String? { return "id" }
 }
 
-final class CartItemObject: Object {
-    @objc dynamic var productId = Int()
-    @objc dynamic var productSize = Int()
-    @objc dynamic var productType = Int()
-    @objc dynamic var productCount = Int()
+class CartItemObject: Object {
+    var productId = Int()
+    var productSize = Int()
+    var productType = Int()
+    var productCount = Int()
 }
 
 class CatalogController: UICollectionViewController, UISearchResultsUpdating, UISearchBarDelegate {
@@ -51,11 +67,10 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
     private var refreshControl = UIRefreshControl()
     private var searchController = UISearchController()
     private var condencedLayout = false
-    private var layoutChangeInProgress = false
     
     private var notificationToken: NotificationToken?
+    var currentCategory = 0
     
-    private let products = try! Realm().objects(ProductObject.self)
     private let purchases = try! Realm().objects(CartItemObject.self)
     private let categories = try! Realm().objects(CategoryObject.self)
 
@@ -74,44 +89,21 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
             collectionView?.addSubview(refreshControl)
         }
         let nb = navigationController!.navigationBar.layer
-//        nb.borderWidth = 1
-//        nb.borderColor = navigationController?.navigationBar.barTintColor?.cgColor
         nb.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5).cgColor
         nb.shadowOffset = CGSize(width: 0, height: 0)
         nb.shadowRadius = 3.0
         nb.shadowOpacity = 1.0
         nb.masksToBounds = false
         let tb = tabBarController!.tabBar.layer
-//        tb.borderWidth = 1
-//        tb.borderColor = tabBarController?.tabBar.barTintColor?.cgColor
         tb.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
         tb.shadowOffset = CGSize(width: 0, height: 0)
         tb.shadowRadius = 3.0
         tb.shadowOpacity = 1.0
         tb.masksToBounds = false
 
-        if products.count < 20 {
-            let realm = try! Realm()
-            try! realm.write {
-                for i in 1...20 {
-                    let product = ProductObject()
-                    product.id = i
-                    realm.add(product)
-                }
-            }
-        }
-        if categories.count < 20 {
-            let realm = try! Realm()
-            try! realm.write {
-                for i in 1...20 {
-                    let category = CategoryObject()
-                    category.id = i
-                    realm.add(category)
-                }
-            }
-        }
+        updateCatalog()
 
-        self.notificationToken = products.observe { (changes: RealmCollectionChange) in
+        self.notificationToken = categories[currentCategory].products.observe { (changes: RealmCollectionChange) in
             switch changes {
             case .initial:
                 // Results are now populated and can be accessed without blocking the UI
@@ -131,8 +123,6 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
                 break
             }
         }
-        
-        //navigationController?.delegate = NavigationControllerDelegate()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -143,21 +133,76 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         updateLayout(size: collectionView!.bounds.size, animated: false)
     }
 
-    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let color = UIColor.DarkCoral()
-        guard let verticalIndicator = scrollView.subviews.last as? UIImageView,
-            verticalIndicator.backgroundColor != color,
-            verticalIndicator.image?.renderingMode != .alwaysTemplate
-            else { return }
-        verticalIndicator.layer.masksToBounds = true
-        verticalIndicator.layer.cornerRadius = verticalIndicator.frame.width / 2
-        verticalIndicator.backgroundColor = color
-        verticalIndicator.image = verticalIndicator.image?.withRenderingMode(.alwaysTemplate)
-        verticalIndicator.tintColor = .clear
-    }
+//    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
+//        let color = UIColor.DarkCoral()
+//        guard let verticalIndicator = scrollView.subviews.last as? UIImageView,
+//            verticalIndicator.backgroundColor != color,
+//            verticalIndicator.image?.renderingMode != .alwaysTemplate
+//            else { return }
+//        verticalIndicator.layer.masksToBounds = true
+//        verticalIndicator.layer.cornerRadius = verticalIndicator.frame.width / 2
+//        verticalIndicator.backgroundColor = color
+//        verticalIndicator.image = verticalIndicator.image?.withRenderingMode(.alwaysTemplate)
+//        verticalIndicator.tintColor = .clear
+//    }
     
     @objc func refreshAction() {
         refreshControl.endRefreshing()
+    }
+    
+    func updateCatalog() {
+        if let path = Bundle.main.path(forResource: "pizza", ofType: "json") {
+            do {
+                let data = try Data(contentsOf: URL(fileURLWithPath: path), options: .mappedIfSafe)
+                let json = try JSON(data: data)
+                let realm = try! Realm()
+                try! realm.write {
+                    for i in json["products"].arrayValue {
+                        let c = ProductObject()
+                        c.id = i["id"].intValue
+                        c.category = i["category"].intValue
+                        c.title = i["title"].stringValue
+                        c.fullDescription = i["description"].stringValue
+                        c.icon = i["icon"].stringValue
+                        c.units = i["units"].stringValue
+                        for j in i["variants"].arrayValue {
+                            let v = VariantObject()
+                            v.weight = j["weight"].doubleValue
+                            v.price = j["price"].doubleValue
+                            v.size = j["size"].intValue
+                            v.dough = j["dough"].intValue
+                            c.variants.append(v)
+                        }
+                        realm.add(c, update: true)
+                    }
+                }
+                try! realm.write {
+                    for i in json["categories"].arrayValue {
+                        let c = CategoryObject()
+                        c.id = i["id"].intValue
+                        c.title = i["title"].stringValue
+                        c.icon = i["icon"].stringValue
+                        c.products.append(objectsIn: realm.objects(ProductObject.self).filter("category=\(c.id)"))
+                        realm.add(c, update: true)
+                    }
+                    for i in json["sizes"].arrayValue {
+                        let c = SizeObject()
+                        c.id = i["id"].intValue
+                        c.title = i["title"].stringValue
+                        realm.add(c, update: true)
+                    }
+                    for i in json["doughs"].arrayValue {
+                        let c = DoughObject()
+                        c.id = i["id"].intValue
+                        c.title = i["title"].stringValue
+                        realm.add(c, update: true)
+                    }
+                }
+                //print(json)
+            } catch {
+                print("pizza.json not valid")
+            }
+        }
     }
     
     func updateLayout(size: CGSize, animated: Bool) {
@@ -191,14 +236,12 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
     }
 
     @IBAction func favoriteAction(_ sender: UIButton) {
-//        guard let button: UIButton = condencedLayout ? (sender.superview?.superview?.superview as! CondencedCell).favoriteButton : (sender.superview?.superview?.superview as! CatalogCell).favoriteButton else { return }
         let index = sender.superview!.superview!.superview!.tag
-        let product = products[index]
+        let product = categories[currentCategory].products[index]
         let realm = try! Realm()
         try! realm.write {
             product.favorite = !product.favorite
         }
-        //button.isSelected = product.favorite
     }
     
     @IBAction func changeLayout(_ sender: UIButton) {
@@ -209,48 +252,67 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         } else {
             sender.setImage(UIImage(named: "CompactCollection"), for: .normal)
         }
-        //layoutChangeInProgress = true
-        //collectionView?.reloadData()
-        //layoutChangeInProgress = false
         updateLayout(size: collectionView!.bounds.size, animated: false)
         collectionView?.reloadData()
-        //collectionView?.reloadSections([0])
     }
     
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        if segue.identifier == "ShowCategorySegue" {
+            let categoryController = segue.destination as! CategoryController
+            categoryController.catalogController = self
+            categoryController.currentCategory = currentCategory
+        }
     }
     
     ///////////////////////////// Collection View Delegate ///////////////////////////////
     
-    override func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if layoutChangeInProgress { return 0}
-        return products.count
+        //if layoutChangeInProgress { return 0}
+        return categories[currentCategory].products.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let index = indexPath.row
-        let product = products[index]
+        let product = categories[currentCategory].products[index]
         if condencedLayout {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CondencedCell", for: indexPath) as! CondencedCell
             cell.tag = index
+            cell.titleLabel.text = product.title
+            cell.descriptionLabel.text = product.fullDescription
             cell.favoriteButton.isSelected = product.favorite
+            if let url = URL(string: product.icon) {
+                DispatchQueue.main.async { cell.imageView.kf.setImage(with: url) }
+            } else {
+                cell.imageView.image = UIImage(named:"ImagePlaceholder")
+            }
+            if let variant = product.variants.first {
+                let astring = NSMutableAttributedString(string: "\(variant.price)")
+                let size = cell.priceLabel.font.pointSize
+                let asuffix = NSAttributedString(string: " ₽", attributes:[NSAttributedStringKey.font : cell.priceLabel.font.withSize(size*0.75)])
+                astring.append(asuffix)
+                cell.priceLabel.attributedText = astring
+            }
             return cell
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CatalogCell", for: indexPath) as! CatalogCell
             cell.tag = index
+            cell.titleLabel.text = product.title
+            cell.descriptionLabel.text = product.fullDescription
             cell.favoriteButton.isSelected = product.favorite
+            if let url = URL(string: product.icon) {
+                DispatchQueue.main.async { cell.imageView.kf.setImage(with: url) }
+            } else {
+                cell.imageView.image = UIImage(named:"ImagePlaceholder")
+            }
+            if let variant = product.variants.first {
+                let astring = NSMutableAttributedString(string: "\(variant.price)")
+                let size = cell.priceLabel.font.pointSize
+                let asuffix = NSAttributedString(string: " ₽", attributes:[NSAttributedStringKey.font : cell.priceLabel.font.withSize(size*0.75)])
+                astring.append(asuffix)
+                cell.priceLabel.attributedText = astring
+            }
             return cell
         }
-//        DispatchQueue.main.async {
-//            cell.imageView.kf.setImage(with: URL(string: "https://4k.com/wp-content/uploads/2014/06/4k-image-tiger-jumping.jpg")!)
-//        }
     }
     
     ///////////////////////////// Search Results Delegate ///////////////////////////

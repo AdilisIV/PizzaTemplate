@@ -124,7 +124,8 @@
                                                     </constraints>
                                                 </imageView>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="right" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="304-O4-fdo">
-                                                    <rect key="frame" x="118" y="0.0" width="34" height="38"/>
+                                                    <rect key="frame" x="118" y="0.0" width="34" height="33"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="10"/>
                                                     <inset key="contentEdgeInsets" minX="8" minY="8" maxX="8" maxY="8"/>
                                                     <state key="normal" image="CellLightStar"/>
                                                     <state key="selected" image="CellDarkStar"/>
@@ -331,9 +332,9 @@
                     <navigationItem key="navigationItem" id="ooR-NG-36d">
                         <nil key="title"/>
                         <barButtonItem key="backBarButtonItem" title=" " id="inb-of-43E"/>
-                        <barButtonItem key="leftBarButtonItem" title="Пицца ▾ " id="Ukp-kE-EMU">
+                        <barButtonItem key="leftBarButtonItem" title="▽ Пицца" id="Ukp-kE-EMU">
                             <connections>
-                                <segue destination="Alz-R0-ZfU" kind="show" id="4WG-t9-oYX"/>
+                                <segue destination="Alz-R0-ZfU" kind="show" identifier="ShowCategorySegue" id="4WG-t9-oYX"/>
                             </connections>
                         </barButtonItem>
                         <rightBarButtonItems>
