@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 class ProductController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
@@ -15,8 +16,23 @@ class ProductController: UIViewController, UICollectionViewDelegate, UICollectio
     @IBOutlet weak var gallery: UICollectionView!
     @IBOutlet weak var prevImageButton: UIButton!
     @IBOutlet weak var nextImageButton: UIButton!
+    @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var descriptionLabel: UILabel!
+    @IBOutlet weak var weightLabel: UILabel!
+    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var addToCartButton: UIButton!
+    @IBOutlet weak var sizeControl: UISegmentedControl!
+    @IBOutlet weak var doughControl: UISegmentedControl!
+    @IBOutlet weak var favoriteButton: UIButton!
+    @IBOutlet weak var configurationConstraint: NSLayoutConstraint!
     
-    let images = ["Pizza","Pizza2","Pizza3"]
+    private let sizes = try! Realm().objects(SizeObject.self)
+    private let doughs = try! Realm().objects(DoughObject.self)
+    
+    var selectedDough = 1
+    var selectedSize = 1
+
+    var product: ProductObject? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,6 +49,84 @@ class ProductController: UIViewController, UICollectionViewDelegate, UICollectio
         blankView.layer.masksToBounds = true
 
         gallery.addObserver(self, forKeyPath: "contentSize", options: NSKeyValueObservingOptions.new, context: nil)
+    }
+    
+    @IBAction func favoriteAction(_ sender: UIButton) {
+        if product != nil {
+            let realm = try! Realm()
+            try! realm.write {
+                product!.favorite = !product!.favorite
+            }
+            updateProductView()
+        }
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        updateProductView()
+    }
+    
+    @IBAction func doughChanged(_ sender: UISegmentedControl) {
+        selectedDough = sender.selectedSegmentIndex + 1
+        updateProductView()
+    }
+    
+    @IBAction func sizeChanged(_ sender: UISegmentedControl) {
+        selectedSize = sender.selectedSegmentIndex + 1
+        updateProductView()
+    }
+    
+    func updateProductView() {
+        
+        if product != nil {
+            
+            let formatter = NumberFormatter()
+            formatter.decimalSeparator = ","
+            formatter.numberStyle = .decimal
+            formatter.maximumFractionDigits = 2
+            formatter.perMillSymbol = " "
+            formatter.locale = Locale(identifier: "ru")
+
+            titleLabel.text = product!.title
+            navigationItem.title = product!.title
+            descriptionLabel.text = product!.fullDescription
+            if product!.favorite {
+                favoriteButton.setImage(UIImage(named:"CellDarkStar"), for: .normal)
+            } else {
+                favoriteButton.setImage(UIImage(named:"CellLightStar"), for: .normal)
+            }
+            if product!.variants.count > 1 {
+                for size in sizes {
+                    if size.id - 1 < sizes.count {
+                        sizeControl.setTitle(size.title, forSegmentAt: size.id-1)
+                    }
+                }
+                sizeControl.selectedSegmentIndex = selectedSize - 1
+                for dough in doughs {
+                    if dough.id - 1 < doughs.count {
+                        doughControl.setTitle(dough.title, forSegmentAt: dough.id-1)
+                    }
+                }
+                doughControl.selectedSegmentIndex = selectedDough - 1
+                let variant = product!.variants.filter { $0.size == self.selectedSize && $0.dough == self.selectedDough }.first
+                if variant != nil {
+                    weightLabel.text = formatter.string(from: variant!.weight as NSNumber)! + " " + product!.units
+                    let astring = NSMutableAttributedString(string: formatter.string(from: variant!.price as NSNumber)!)
+                    let size = priceLabel.font.pointSize
+                    let asuffix = NSAttributedString(string: " ₽", attributes:[NSAttributedStringKey.font : priceLabel.font.withSize(size*0.75)])
+                    astring.append(asuffix)
+                    priceLabel.attributedText = astring
+                }
+            } else if product!.variants.count > 0 {
+                let variant = product!.variants.first!
+                weightLabel.text = formatter.string(from: variant.weight as NSNumber)! + " " + product!.units
+                let astring = NSMutableAttributedString(string: formatter.string(from: variant.price as NSNumber)!)
+                let size = priceLabel.font.pointSize
+                let asuffix = NSAttributedString(string: " ₽", attributes:[NSAttributedStringKey.font : priceLabel.font.withSize(size*0.75)])
+                astring.append(asuffix)
+                priceLabel.attributedText = astring
+                configurationConstraint.constant = 0
+            }
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -60,8 +154,9 @@ class ProductController: UIViewController, UICollectionViewDelegate, UICollectio
     }
     
     @IBAction func nextImageAction(_ sender: UIButton) {
+        if product == nil { return }
         var index = Int(ceil(gallery.contentOffset.x/gallery.frame.size.width)) + 1
-        if index >= images.count { index = images.count - 1 }
+        if index >= product!.icons.count { index = product!.icons.count - 1 }
         gallery.scrollToItem(at: IndexPath(row: index, section: 0), at: UICollectionViewScrollPosition.centeredHorizontally, animated: true)
     }
     
@@ -80,17 +175,24 @@ class ProductController: UIViewController, UICollectionViewDelegate, UICollectio
     
     ///////////////////////////// Collection View Delegate ///////////////////////////////
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 1
-    }
-    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return images.count
+        if product != nil { return product!.icons.count }
+        return 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "GalleryCell", for: indexPath) as! GalleryCell
-        cell.imageView.image = UIImage(named:images[indexPath.row])
+        let index = indexPath.row
+        if product != nil {
+            if index < product!.icons.count {
+                //print(product!.icons[index])
+                if let url = URL(string: product!.icons[index]) {
+                    DispatchQueue.main.async { cell.imageView.kf.setImage(with: url, placeholder:UIImage(named:"ImagePlaceholder")) }
+                    return cell
+                }
+            }
+        }
+        cell.imageView.image = UIImage(named:"ImagePlaceholder")
         return cell
     }
     

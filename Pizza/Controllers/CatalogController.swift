@@ -48,11 +48,12 @@ class ProductObject: Object {
     @objc dynamic var category = Int()
     @objc dynamic var title = String()
     @objc dynamic var fullDescription = String()
-    @objc dynamic var icon = String()
     @objc dynamic var units = String()
-    @objc dynamic var favorite = false
+    @objc dynamic var favorite = Bool()
+    let icons = List<String>()
     let variants = List<VariantObject>()
     override static func primaryKey() -> String? { return "id" }
+//    override static func ignoredProperties() -> [String] { return ["favorite"] }
 }
 
 class CartItemObject: Object {
@@ -64,18 +65,27 @@ class CartItemObject: Object {
 
 class CatalogController: UICollectionViewController, UISearchResultsUpdating, UISearchBarDelegate {
 
+    @IBOutlet weak var categoryButton: UIBarButtonItem!
+    
     private var refreshControl = UIRefreshControl()
     private var searchController = UISearchController()
     private var condencedLayout = false
-    
     private var notificationToken: NotificationToken?
-    var currentCategory = 0
+    
+    var currentProduct = 0
+    private var privateCategory = 0
+    var currentCategory: Int {
+        get { return privateCategory }
+        set(newCategory) {
+            privateCategory = newCategory
+            addCategoryObserver()
+        }
+    }
     
     private let purchases = try! Realm().objects(CartItemObject.self)
     private let categories = try! Realm().objects(CategoryObject.self)
 
     override func viewDidLoad() {
-        
         super.viewDidLoad()
         
         if #available(iOS 11.0, *) {
@@ -102,7 +112,20 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         tb.masksToBounds = false
 
         updateCatalog()
-
+        currentCategory = 0
+        categoryButton.title = "▼ " + categories[currentCategory].title
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        updateLayout(size: collectionView!.bounds.size, animated: false)
+    }
+    
+    override func viewSafeAreaInsetsDidChange() {
+        updateLayout(size: collectionView!.bounds.size, animated: false)
+    }
+    
+    func addCategoryObserver() {
+        if currentCategory >= categories.count { return }
         self.notificationToken = categories[currentCategory].products.observe { (changes: RealmCollectionChange) in
             switch changes {
             case .initial:
@@ -123,14 +146,6 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
                 break
             }
         }
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        updateLayout(size: collectionView!.bounds.size, animated: false)
-    }
-    
-    override func viewSafeAreaInsetsDidChange() {
-        updateLayout(size: collectionView!.bounds.size, animated: false)
     }
 
 //    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -163,8 +178,11 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
                         c.category = i["category"].intValue
                         c.title = i["title"].stringValue
                         c.fullDescription = i["description"].stringValue
-                        c.icon = i["icon"].stringValue
                         c.units = i["units"].stringValue
+                        if let s = realm.object(ofType: ProductObject.self, forPrimaryKey: c.id) {
+                            c.favorite = s.favorite
+                        }
+                        for j in i["icons"].arrayValue { c.icons.append(j.stringValue) }
                         for j in i["variants"].arrayValue {
                             let v = VariantObject()
                             v.weight = j["weight"].doubleValue
@@ -215,7 +233,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         
         let columns = (size.width > size.height) ? 4 : 2 as CGFloat
         var width = (size.width-10-insets.left-insets.right-(columns-1)*2)/columns
-        var height = width + 120
+        var height = width + 110
         if condencedLayout {
             width = size.width-insets.left-insets.right-8
             height = 100
@@ -226,7 +244,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.itemSize = cellSize
-        layout.sectionInset = UIEdgeInsets(top: 6, left: 4, bottom: 6, right: 4)
+        layout.sectionInset = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
         layout.minimumLineSpacing = 4
         layout.minimumInteritemSpacing = 2
         if #available(iOS 11.0, *) {
@@ -236,7 +254,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
     }
 
     @IBAction func favoriteAction(_ sender: UIButton) {
-        let index = sender.superview!.superview!.superview!.tag
+        let index = sender.tag
         let product = categories[currentCategory].products[index]
         let realm = try! Realm()
         try! realm.write {
@@ -261,32 +279,63 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
             let categoryController = segue.destination as! CategoryController
             categoryController.catalogController = self
             categoryController.currentCategory = currentCategory
+        } else if segue.identifier == "ShowProductSegue" {
+            let productController = segue.destination as! ProductController
+            productController.product = categories[currentCategory].products[currentProduct]
         }
     }
     
     ///////////////////////////// Collection View Delegate ///////////////////////////////
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        //if layoutChangeInProgress { return 0}
-        return categories[currentCategory].products.count
+        let count = categories[currentCategory].products.count
+        if count == 0 {
+            if let emptyView = Bundle.main.loadNibNamed("EmptyCollectionView", owner: self, options: nil)?.first as? UIView /*as? EmptyCollectionView*/ {
+                collectionView.backgroundView = emptyView
+            }
+        } else {
+            collectionView.backgroundView = nil
+        }
+        return count
     }
-    
+
+    override func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        currentProduct = indexPath.row
+        performSegue(withIdentifier: "ShowProductSegue", sender: self)
+    }
+
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let index = indexPath.row
         let product = categories[currentCategory].products[index]
+        
+        let formatter = NumberFormatter()
+        formatter.decimalSeparator = ","
+        formatter.numberStyle = .decimal
+        formatter.maximumFractionDigits = 2
+        formatter.perMillSymbol = " "
+        formatter.locale = Locale(identifier: "ru")
+
         if condencedLayout {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CondencedCell", for: indexPath) as! CondencedCell
             cell.tag = index
+            cell.favoriteButton.tag = index
             cell.titleLabel.text = product.title
             cell.descriptionLabel.text = product.fullDescription
-            cell.favoriteButton.isSelected = product.favorite
-            if let url = URL(string: product.icon) {
+            if product.favorite {
+                cell.favoriteButton.setImage(UIImage(named:"CellDarkStar"), for: .normal)
+            } else {
+                cell.favoriteButton.setImage(UIImage(named:"CellLightStar"), for: .normal)
+            }
+            //cell.favoriteButton.isSelected = product.favorite
+            if let url = URL(string: product.icons.first!) {
                 DispatchQueue.main.async { cell.imageView.kf.setImage(with: url) }
             } else {
                 cell.imageView.image = UIImage(named:"ImagePlaceholder")
             }
             if let variant = product.variants.first {
-                let astring = NSMutableAttributedString(string: "\(variant.price)")
+                let astring = NSMutableAttributedString(string: formatter.string(from: variant.price as NSNumber)!)
+
+                //let astring = NSMutableAttributedString(string: "\(variant.price)")
                 let size = cell.priceLabel.font.pointSize
                 let asuffix = NSAttributedString(string: " ₽", attributes:[NSAttributedStringKey.font : cell.priceLabel.font.withSize(size*0.75)])
                 astring.append(asuffix)
@@ -296,16 +345,22 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         } else {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CatalogCell", for: indexPath) as! CatalogCell
             cell.tag = index
+            cell.favoriteButton.tag = index
             cell.titleLabel.text = product.title
             cell.descriptionLabel.text = product.fullDescription
-            cell.favoriteButton.isSelected = product.favorite
-            if let url = URL(string: product.icon) {
+            if product.favorite {
+                cell.favoriteButton.setImage(UIImage(named:"CellDarkStar"), for: .normal)
+            } else {
+                cell.favoriteButton.setImage(UIImage(named:"CellLightStar"), for: .normal)
+            }
+            //cell.favoriteButton.isSelected = product.favorite
+            if let url = URL(string: product.icons.first!) {
                 DispatchQueue.main.async { cell.imageView.kf.setImage(with: url) }
             } else {
                 cell.imageView.image = UIImage(named:"ImagePlaceholder")
             }
             if let variant = product.variants.first {
-                let astring = NSMutableAttributedString(string: "\(variant.price)")
+                let astring = NSMutableAttributedString(string: formatter.string(from: variant.price as NSNumber)!)
                 let size = cell.priceLabel.font.pointSize
                 let asuffix = NSAttributedString(string: " ₽", attributes:[NSAttributedStringKey.font : cell.priceLabel.font.withSize(size*0.75)])
                 astring.append(asuffix)

@@ -15,24 +15,28 @@
 		{ "id": 13, "title": "Супы",         "icon": null }
 	],
 	"sizes": [
-		{ "id": 1, "title": "24 см." },
-		{ "id": 2, "title": "30 см." },
-		{ "id": 3, "title": "40 см." }
+		{ "id": 1, "title": "24 см" },
+		{ "id": 2, "title": "30 см" },
+		{ "id": 3, "title": "40 см" }
 	],
 	"doughs": [
-		{ "id": 1, "title": "Пышное" },
+		{ "id": 1, "title": "Традиционное" },
 		{ "id": 2, "title": "Тонкое" }
 	],
 	"products": [
 		{
 			"id": 11,
 			"category": 1,
-			"title": "Сырная",
-			"description": "Помидоры, соус сырный, сыр моцарелла",
-			"icon": "http://192.168.1.158/Magazine/goods/icons/p1.jpg",
+			"title": "Четыре сыра",
+			"description": "Не Моцареллой единой будет сыт человек! Есть и другие сыры, которые так и просятся на пышущее жаром тесто, чтобы растаять от нежности и отдать вам все ароматы и нотки вкуса. Мягкие, сливочные сыры сочетаются с твердыми, выдержанными – для ценителей сыров здесь и сочная нежность, и ореховый привкус, и пикантная острота и невероятный аромат, от которого просто сводит с ума. Вы все еще не отведали Четыре сыра от Сити Пицца?! Осущестите заказ и получайте удовольствие от настоящей пиццы!",
+			"icons": [
+                     "http://192.168.1.158/Magazine/goods/icons/pizza1.png",
+                     "http://192.168.1.158/Magazine/goods/icons/pizza2.png",
+                     "http://192.168.1.158/Magazine/goods/icons/pizza3.png"
+            ],
 			"units": "грамм",
 			"variants": [
-				{ "size": 1, "dough": 1, "weight": 440, "price": 440 },
+				{ "size": 1, "dough": 1, "weight": 440, "price": 439.99 },
 				{ "size": 2, "dough": 1, "weight": 610, "price": 580 },
 				{ "size": 3, "dough": 1, "weight": 880, "price": 720 },
 				{ "size": 1, "dough": 2, "weight": 440, "price": 440 },
@@ -45,7 +49,7 @@
 			"category": 1,
 			"title": "Неаполитана",
 			"description": "Бекон, ветчина,курица,перец болгарский, помидоры, маслины, соус гриль,сыр моцарелла, зелень",
-			"icon": "http://192.168.1.158/Magazine/goods/icons/p2.jpg",
+			"icons": ["http://192.168.1.158/Magazine/goods/icons/p2.jpg"],
 			"units": "грамм",
 			"variants": [
 				{ "size": 1, "dough": 1, "weight": 440, "price": 440 },
@@ -61,7 +65,7 @@
 			"category": 1,
 			"title": "Неаполитана 2",
 			"description": "Бекон, ветчина,курица,перец болгарский, помидоры, маслины, соус гриль,сыр моцарелла, зелень",
-			"icon": "http://192.168.1.158/Magazine/goods/icons/p2.jpg",
+			"icons": ["http://192.168.1.158/Magazine/goods/icons/p2.jpg"],
 			"units": "грамм",
 			"variants": [
 				{ "size": 1, "dough": 1, "weight": 440, "price": 440 },
@@ -77,33 +81,25 @@
 			"category": 2,
 			"title": "Морс клюквенный",
 			"description": "Натуральный фирменный морс из клюквы",
-			"icon": "http://192.168.1.158/Magazine/goods/icons/s1.jpg",
-			"units": "л.",
-			"variants": [
-				{ "weight": 0.5, "price": 50 },
-				{ "weight": 1.25, "price": 100 },
-				{ "weight": 2, "price": 150 }
-			]
+			"icons": ["http://192.168.1.158/Magazine/goods/icons/s1.jpg"],
+			"units": "мл",
+			"variants": [{ "weight": 400, "price": 50 }]
 		},
 		{
 			"id": 22,
 			"category": 2,
 			"title": "Сок Зеленое яблоко",
 			"description": "Качественные премиальные 100% соки и нектары для прилива сил и бодрости",
-			"icon": "http://192.168.1.158/Magazine/goods/icons/s2.jpg",
+			"icons": ["http://192.168.1.158/Magazine/goods/icons/s2.jpg"],
 			"units": "л.",
-			"variants": [
-				{ "weight": 0.25, "price": 60 },
-				{ "weight": 0.5, "price": 110 },
-				{ "weight": 1, "price": 200 }
-			]
+			"variants": [{ "weight": 0.95, "price": 110 }]
 		},
 		{
 			"id": 51,
 			"category": 5,
 			"title": "Сет 4 ролла с Филадельфией V.2.0",
 			"description": "Обновился состав сета: Ред-ролл заменён на ролл Горячая цыпа Ролл Горячая цыпа, ролл с огурцом, Фета-ролл, ролл Филадельфия-баланс.",
-			"icon": "http://192.168.1.158/Magazine/goods/icons/set1.jpg",
+			"icons": ["http://192.168.1.158/Magazine/goods/icons/set1.jpg"],
 			"units": "грамм",
 			"variants": [{ "weight": 780, "price": 569 }]
 		},
@@ -112,7 +108,7 @@
 			"category": 5,
 			"title": "Сет Терияки",
 			"description": "Ролл Спайси фиш, ролл Горячий панко, ролл Горячий терияки, ролл Блэк стар, ролл С доброй рыбкой.",
-			"icon": "http://192.168.1.158/Magazine/goods/icons/set2.jpg",
+			"icons": ["http://192.168.1.158/Magazine/goods/icons/set2.jpg"],
 			"units": "грамм",
 			"variants": [{ "weight": 1055, "price": 987 }]
 		},
@@ -121,7 +117,7 @@
 			"category": 5,
 			"title": "Сет YAKIMOTO",
 			"description": "Ролл Спайси фиш, ролл Горячий панко, ролл Горячий терияки, ролл Блэк стар, ролл С доброй рыбкой.",
-			"icon": "http://192.168.1.158/Magazine/goods/icons/set2.jpg",
+			"icons": ["http://192.168.1.158/Magazine/goods/icons/set2.jpg"],
 			"units": "грамм",
 			"variants": [{ "weight": 1055, "price": 987 }]
 		}

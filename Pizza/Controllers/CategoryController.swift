@@ -38,6 +38,7 @@ class CategoryController: UICollectionViewController {
         currentCategory = indexPath.row
         catalogController?.currentCategory = currentCategory
         catalogController?.collectionView?.reloadData()
+        catalogController?.categoryButton.title = "▼ " + categories[currentCategory].title
         navigationController?.popViewController(animated: true)
     }
     
@@ -59,7 +60,7 @@ class CategoryController: UICollectionViewController {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .vertical
         layout.itemSize = cellSize
-        layout.sectionInset = UIEdgeInsets(top: 6, left: 4, bottom: 6, right: 4)
+        layout.sectionInset = UIEdgeInsets(top: 4, left: 4, bottom: 4, right: 4)
         layout.minimumLineSpacing = 4
         layout.minimumInteritemSpacing = 2
         if #available(iOS 11.0, *) { layout.sectionInsetReference = .fromSafeArea }
@@ -78,7 +79,7 @@ class CategoryController: UICollectionViewController {
         if let url = URL(string: self.categories[indexPath.row].icon) {
             DispatchQueue.main.async { cell.categoryImageView.kf.setImage(with: url) }
         } else {
-            cell.categoryImageView.image = UIImage(named:"ImagePlaceholder")
+            cell.categoryImageView.image = UIImage(named:"ImageCategory")
         }
 
         return cell

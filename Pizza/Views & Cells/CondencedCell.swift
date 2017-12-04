@@ -30,5 +30,7 @@ class CondencedCell: UICollectionViewCell {
         self.layer.shadowRadius = 2.0
         self.layer.shadowOpacity = 1.0
         self.layer.masksToBounds = false
+        
+        favoriteButton.setImage(UIImage(named:"CellDarkStar"), for: [.selected, .highlighted])
     }
 }
