@@ -28,6 +28,7 @@ class ProductController: UIViewController, UICollectionViewDelegate, UICollectio
     
     private let sizes = try! Realm().objects(SizeObject.self)
     private let doughs = try! Realm().objects(DoughObject.self)
+    private let purchases = try! Realm().objects(PurchaseObject.self)
     
     var selectedDough = 1
     var selectedSize = 1
@@ -61,8 +62,35 @@ class ProductController: UIViewController, UICollectionViewDelegate, UICollectio
         }
     }
     
+    @IBAction func addtocartAction(_ sender: UIButton) {
+        var variantIndex = 0
+        if product != nil {
+            for i in 0 ..< product!.variants.count {
+                if let size = product?.variants[i].size, let dough = product?.variants[i].dough {
+                    if size == selectedSize && dough == selectedDough {
+                        variantIndex = i
+                        break
+                    }
+                }
+            }
+            let realm = try! Realm()
+            if let samePurchase = purchases.filter("productId=\(product!.id) AND productVariant=\(variantIndex)").first {
+                try! realm.write { samePurchase.productCount += 1 }
+            } else {
+                try! realm.write {
+                    let purchase = PurchaseObject()
+                    purchase.productId = product!.id
+                    purchase.productVariant = variantIndex
+                    purchase.productCount = 1
+                    realm.add(purchase)
+                }
+            }
+        }
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         updateProductView()
+        updateLayout(size: gallery.frame.size, animated: false)
     }
     
     @IBAction func doughChanged(_ sender: UISegmentedControl) {
@@ -145,6 +173,7 @@ class ProductController: UIViewController, UICollectionViewDelegate, UICollectio
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         gallery.setCollectionViewLayout(layout, animated: animated)
+        gallery.scrollToItem(at: IndexPath(row: 0, section: 0), at: UICollectionViewScrollPosition.left, animated: false)
     }
 
     @IBAction func prevImageAction(_ sender: UIButton) {

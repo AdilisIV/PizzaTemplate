@@ -43,6 +43,20 @@ class DoughObject: Object {
     override static func primaryKey() -> String? { return "id" }
 }
 
+class IngredientObject: Object {
+    @objc dynamic var id = Int()
+    @objc dynamic var title = String()
+    @objc dynamic var weight = Double()
+    @objc dynamic var price = Double()
+    @objc dynamic var icon = String()
+    override static func primaryKey() -> String? { return "id" }
+}
+
+class AddedIngredientObject: Object {
+    @objc dynamic var ingredientId = Int()
+    @objc dynamic var ingredientCount = Int()
+}
+
 class ProductObject: Object {
     @objc dynamic var id = Int()
     @objc dynamic var category = Int()
@@ -52,15 +66,16 @@ class ProductObject: Object {
     @objc dynamic var favorite = Bool()
     let icons = List<String>()
     let variants = List<VariantObject>()
+    let ingredients = List<IngredientObject>()
     override static func primaryKey() -> String? { return "id" }
-//    override static func ignoredProperties() -> [String] { return ["favorite"] }
 }
 
-class CartItemObject: Object {
-    var productId = Int()
-    var productSize = Int()
-    var productType = Int()
-    var productCount = Int()
+class PurchaseObject: Object {
+    @objc dynamic var productId = Int()
+    @objc dynamic var productVariant = Int()
+    @objc dynamic var productCount = Int()
+    @objc dynamic var date = Date()
+    let addedIngredients = List<AddedIngredientObject>()
 }
 
 class CatalogController: UICollectionViewController, UISearchResultsUpdating, UISearchBarDelegate {
@@ -82,8 +97,10 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         }
     }
     
-    private let purchases = try! Realm().objects(CartItemObject.self)
-    private let categories = try! Realm().objects(CategoryObject.self)
+    var cartBadge = 0
+    
+    private let purchases = try! Realm().objects(PurchaseObject.self).sorted(byKeyPath: "date", ascending: true)
+    private let categories = try! Realm().objects(CategoryObject.self).sorted(byKeyPath: "id", ascending: true)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -104,12 +121,13 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         nb.shadowRadius = 3.0
         nb.shadowOpacity = 1.0
         nb.masksToBounds = false
-        let tb = tabBarController!.tabBar.layer
-        tb.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
-        tb.shadowOffset = CGSize(width: 0, height: 0)
-        tb.shadowRadius = 3.0
-        tb.shadowOpacity = 1.0
-        tb.masksToBounds = false
+        
+//        let tb = tabBarController!.tabBar.layer
+//        tb.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+//        tb.shadowOffset = CGSize(width: 0, height: 0)
+//        tb.shadowRadius = 3.0
+//        tb.shadowOpacity = 1.0
+//        tb.masksToBounds = false
 
         updateCatalog()
         currentCategory = 0
@@ -118,6 +136,12 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
     
     override func viewWillAppear(_ animated: Bool) {
         updateLayout(size: collectionView!.bounds.size, animated: false)
+        let tb = tabBarController!.tabBar.layer
+        tb.shadowColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.15).cgColor
+        tb.shadowOffset = CGSize(width: 0, height: 0)
+        tb.shadowRadius = 3.0
+        tb.shadowOpacity = 1.0
+        tb.masksToBounds = false
     }
     
     override func viewSafeAreaInsetsDidChange() {
@@ -134,11 +158,12 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
                 break
             case .update(_, let deletions, let insertions, let modifications):
                 // Query results have changed, so apply them to the TableView
+                //self.collectionView?.reloadData()
                 self.collectionView?.performBatchUpdates({
                     self.collectionView?.insertItems(at: insertions.map { IndexPath(row: $0, section: 0) })
                     self.collectionView?.deleteItems(at: deletions.map { IndexPath(row: $0, section: 0) })
                     self.collectionView?.reloadItems(at: modifications.map { IndexPath(row: $0, section: 0) })
-                }, completion: { (completed) in })
+                }, completion: { (completed) in /*self.collectionView?.reloadData()*/ })
                 break
             case .error(let err):
                 // An error occurred while opening the Realm file on the background worker thread
@@ -162,7 +187,8 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
 //    }
     
     @objc func refreshAction() {
-        refreshControl.endRefreshing()
+        updateCatalog()
+        //refreshControl.endRefreshing()
     }
     
     func updateCatalog() {
@@ -215,12 +241,22 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
                         c.title = i["title"].stringValue
                         realm.add(c, update: true)
                     }
+                    for i in json["ingredients"].arrayValue {
+                        let c = IngredientObject()
+                        c.id = i["id"].intValue
+                        c.title = i["title"].stringValue
+                        c.weight = i["weight"].doubleValue
+                        c.price = i["price"].doubleValue
+                        c.icon = i["icon"].stringValue
+                        realm.add(c, update: true)
+                    }
                 }
                 //print(json)
             } catch {
                 print("pizza.json not valid")
             }
         }
+        refreshControl.endRefreshing()
     }
     
     func updateLayout(size: CGSize, animated: Bool) {
@@ -236,7 +272,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         var height = width + 110
         if condencedLayout {
             width = size.width-insets.left-insets.right-8
-            height = 100
+            height = 104
         }
         let cellSize = CGSize(width: width, height: height)
         if currentlayout.itemSize == cellSize { return }
@@ -252,7 +288,33 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         }
         collectionView?.setCollectionViewLayout(layout, animated: animated)
     }
-
+    
+    @IBAction func addtocartAction(_ sender: UIButton) {
+        
+        let index = sender.tag
+        let product = categories[currentCategory].products[index]
+        let realm = try! Realm()
+        if let samePurchase = purchases.filter("productId=\(product.id) AND productVariant=0").first {
+            try! realm.write { samePurchase.productCount+=1 }
+        } else {
+            try! realm.write {
+                let purchase = PurchaseObject()
+                purchase.productId = product.id
+                purchase.productVariant = 0
+                purchase.productCount = 1
+                realm.add(purchase)
+            }
+        }
+        cartBadge = 0
+        for i in purchases { cartBadge += i.productCount }
+        if let items = tabBarController?.tabBar.items {
+            if items.count > 3 {
+                let item = items[3] as UITabBarItem
+                item.badgeValue = "\(cartBadge)"
+            }
+        }
+    }
+    
     @IBAction func favoriteAction(_ sender: UIButton) {
         let index = sender.tag
         let product = categories[currentCategory].products[index]
@@ -290,7 +352,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         let count = categories[currentCategory].products.count
         if count == 0 {
-            if let emptyView = Bundle.main.loadNibNamed("EmptyCollectionView", owner: self, options: nil)?.first as? UIView /*as? EmptyCollectionView*/ {
+            if let emptyView = Bundle.main.loadNibNamed("EmptyCollectionView", owner: self, options: nil)?.first as? EmptyCollectionView {
                 collectionView.backgroundView = emptyView
             }
         } else {
@@ -319,6 +381,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CondencedCell", for: indexPath) as! CondencedCell
             cell.tag = index
             cell.favoriteButton.tag = index
+            cell.purchaseButton.tag = index
             cell.titleLabel.text = product.title
             cell.descriptionLabel.text = product.fullDescription
             if product.favorite {
@@ -328,7 +391,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
             }
             //cell.favoriteButton.isSelected = product.favorite
             if let url = URL(string: product.icons.first!) {
-                DispatchQueue.main.async { cell.imageView.kf.setImage(with: url) }
+                DispatchQueue.main.async { cell.imageView.kf.setImage(with: url, placeholder:cell.imageView.image) }
             } else {
                 cell.imageView.image = UIImage(named:"ImagePlaceholder")
             }
@@ -346,6 +409,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CatalogCell", for: indexPath) as! CatalogCell
             cell.tag = index
             cell.favoriteButton.tag = index
+            cell.purchaseButton.tag = index
             cell.titleLabel.text = product.title
             cell.descriptionLabel.text = product.fullDescription
             if product.favorite {
@@ -355,7 +419,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
             }
             //cell.favoriteButton.isSelected = product.favorite
             if let url = URL(string: product.icons.first!) {
-                DispatchQueue.main.async { cell.imageView.kf.setImage(with: url) }
+                DispatchQueue.main.async { cell.imageView.kf.setImage(with: url, placeholder:cell.imageView.image) }
             } else {
                 cell.imageView.image = UIImage(named:"ImagePlaceholder")
             }

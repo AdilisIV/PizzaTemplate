@@ -13,11 +13,23 @@ extension UIColor {
     static func RGB(red: Int, green: Int, blue: Int) -> UIColor {
         return UIColor(red: CGFloat(red)/255, green: CGFloat(green)/255, blue: CGFloat(blue)/255, alpha: 1)
     }
-    static func HEX(_ rgb: Int) -> UIColor {
-        return RGB(red: (rgb >> 16) & 0xFF, green: (rgb >> 8) & 0xFF, blue: rgb & 0xFF)
+    static func ARGB(alpha: Int, red: Int, green: Int, blue: Int) -> UIColor {
+        return UIColor(red: CGFloat(red)/255, green: CGFloat(green)/255, blue: CGFloat(blue)/255, alpha: CGFloat(alpha)/255)
+    }
+    static func HEX(_ rgb: Int64) -> UIColor {
+        if rgb > 0xFFFFFF {
+            return ARGB(alpha:Int(rgb >> 24), red: Int(rgb >> 16) & 0xFF, green: Int(rgb >> 8) & 0xFF, blue: Int(rgb & 0xFF))
+        }
+        return RGB(red: Int(rgb >> 16) & 0xFF, green: Int(rgb >> 8) & 0xFF, blue: Int(rgb & 0xFF))
     }
     static func DarkCoral() -> UIColor {
         return HEX(0xd86a43)
+    }
+    static func LightCoral() -> UIColor {
+        return HEX(0xf88a63)
+    }
+    static func AlphaCoral() -> UIColor {
+        return HEX(0xb0d86a43)
     }
 }
 
@@ -30,7 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
         let mainTintColor = UIColor.DarkCoral()
-        let font = UIFont.systemFont(ofSize: 20, weight: .light)
+        let font = UIFont.systemFont(ofSize: 17, weight: .light)
         UINavigationBar.appearance().barTintColor = mainTintColor
         UINavigationBar.appearance().tintColor = .white
         UINavigationBar.appearance().titleTextAttributes = [NSAttributedStringKey.foregroundColor : UIColor.white, NSAttributedStringKey.font : font]
@@ -44,6 +56,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UITabBar.appearance().backgroundColor = .white
         if #available(iOS 11.0, *) {
             UIRefreshControl.appearance(whenContainedInInstancesOf: [UINavigationBar.self]).tintColor = .white
+        }
+        if #available(iOS 10, *) {
+            UITabBarItem.appearance().badgeColor = UIColor.LightCoral()
+            UITabBarItem.appearance()
         }
         window?.tintColor = mainTintColor
         UIApplication.shared.statusBarStyle = .lightContent
