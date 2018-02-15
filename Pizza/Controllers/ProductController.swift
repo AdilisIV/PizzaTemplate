@@ -86,6 +86,7 @@ class ProductController: UIViewController, UICollectionViewDelegate, UICollectio
                 }
             }
         }
+        updateBadge()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -103,6 +104,17 @@ class ProductController: UIViewController, UICollectionViewDelegate, UICollectio
         updateProductView()
     }
     
+    func updateBadge() {
+        var badge = 0
+        for purchase in purchases { badge += purchase.productCount }
+        if let items = tabBarController?.tabBar.items {
+            if items.count > 3 {
+                let item = items[3] as UITabBarItem
+                item.badgeValue = (badge == 0) ? nil : "\(badge)"
+            }
+        }
+    }
+
     func updateProductView() {
         
         if product != nil {

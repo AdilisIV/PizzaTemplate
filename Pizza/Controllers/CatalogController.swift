@@ -97,7 +97,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         }
     }
     
-    var cartBadge = 0
+    //var cartBadge = 0
     
     private let purchases = try! Realm().objects(PurchaseObject.self).sorted(byKeyPath: "date", ascending: true)
     private let categories = try! Realm().objects(CategoryObject.self).sorted(byKeyPath: "id", ascending: true)
@@ -132,6 +132,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
         updateCatalog()
         currentCategory = 0
         categoryButton.title = "▼ " + categories[currentCategory].title
+        updateBadge()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -146,6 +147,17 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
     
     override func viewSafeAreaInsetsDidChange() {
         updateLayout(size: collectionView!.bounds.size, animated: false)
+    }
+    
+    func updateBadge() {
+        var badge = 0
+        for purchase in purchases { badge += purchase.productCount }
+        if let items = tabBarController?.tabBar.items {
+            if items.count > 3 {
+                let item = items[3] as UITabBarItem
+                item.badgeValue = (badge == 0) ? nil : "\(badge)"
+            }
+        }
     }
     
     func addCategoryObserver() {
@@ -305,14 +317,7 @@ class CatalogController: UICollectionViewController, UISearchResultsUpdating, UI
                 realm.add(purchase)
             }
         }
-        cartBadge = 0
-        for i in purchases { cartBadge += i.productCount }
-        if let items = tabBarController?.tabBar.items {
-            if items.count > 3 {
-                let item = items[3] as UITabBarItem
-                item.badgeValue = "\(cartBadge)"
-            }
-        }
+        updateBadge()
     }
     
     @IBAction func favoriteAction(_ sender: UIButton) {
